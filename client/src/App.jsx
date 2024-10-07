@@ -14,7 +14,7 @@ function App() {
 
   //solicitud de agregar un nuevo empleado a la db
   const resgistrar= ()=>{
-    Axios.post("http://localhost:5174/create",{
+    Axios.post("http://localhost:5200/create",{
       nombre: nombre,
       edad: edad,
       pais: pais,
@@ -45,7 +45,7 @@ function App() {
       onChange={(event)=>
         setCargo(event.target.value)
       } /></label>
-      <label>Años<input type="number" className='border-2 border-red-600 m-[10px] h-[30px] pl-[10px] w-[300px] rounded'
+      <label>Años<input type="date" className='border-2 border-red-600 m-[10px] h-[30px] pl-[10px] w-[300px] rounded'
       onChange={(event)=>{
         setAnio(event.target.value)
       }} /></label>
@@ -57,5 +57,3 @@ function App() {
 }
 
 export default App
-
-

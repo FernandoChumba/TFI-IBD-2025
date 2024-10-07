@@ -1,11 +1,15 @@
 const express = require("express");
 const app = express();
-const mysql = require ("mysql");
+const mysql = require('mysql2');
+
 
 const cors = require("cors");
 
 app.use(cors());
 app.use(express.json());
+
+
+
 
 
 const db = mysql.createConnection({
@@ -23,19 +27,22 @@ app.post("/create", (req,res) => {
     const cargo = req.body.cargo;
     const anio = req.body.anio;
 
-    db.query('INSERT INTO empleados(nombre,edad,pais,cargo,anios) VALUES(?,?,?,?,?', [nombre,edad,pais,cargo,anio], (err,result) =>{
-        if(err){
+
+    db.query('INSERT INTO empleados(nombre, edad, pais, cargo, anios) VALUES(?, ?, ?, ?, ?)', [nombre, edad, pais, cargo, anio], (err, result) => {
+        if (err) {
             console.log(err);
-        }else{
+        } else {
             res.send("registrado");
         }
     });
+    
 
 });
 
-app.listen(5174, ()=>{
-    console.log("corriendo en 5174")
+app.listen(5200, ()=>{
+    console.log("corriendo en 5200")
 })
 
 
 //npm install cors
+
