@@ -39,8 +39,25 @@ app.post("/create", (req,res) => {
 
 });
 
-app.listen(5200, ()=>{
-    console.log("corriendo en 5200")
+
+//mostrar 
+app.get("/empleados", (req,res) => {
+ 
+
+    db.query('SELECT * FROM empleados',
+         (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(result);
+        }
+    });
+    
+
+});
+
+app.listen(5174, ()=>{
+    console.log("corriendo en 5174")
 })
 
 
