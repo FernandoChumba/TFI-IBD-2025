@@ -1,94 +1,235 @@
-import { useState } from 'react'
-import Axios from 'axios'
-import './App.css'
-import './index.css'
+import { useState, useEffect } from "react";
+import Axios from "axios";
+import "./App.css";
+import "./index.css";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  
+  const [id, setId] = useState();
   const [nombre, setNombre] = useState("");
   const [edad, setEdad] = useState(0);
   const [pais, setPais] = useState("");
   const [cargo, setCargo] = useState("");
-  const [anio , setAnio] = useState(0);
+  const [anio, setAnio] = useState();
 
+  const [editar, setEditar] = useState(false);
 
-  const [empleadosList,setEmpleados] = useState([]);
+  const [empleadosList, setEmpleados] = useState([]);
+
+  //mantiene datos en interfaz
+
+  useEffect(() => {
+    getEmpleados();
+  });
 
   //solicitud de agregar un nuevo empleado a la db
-  const resgistrar= ()=>{
-    Axios.post("http://localhost:5174/create",{
+  const resgistrar = () => {
+    Axios.post("http://localhost:5174/create", {
       nombre: nombre,
       edad: edad,
       pais: pais,
       cargo: cargo,
-      anio: anio
-    }).then(()=>{
+      anio: anio,
+    }).then(() => {
       getEmpleados();
+      clear();
       alert("empleado registrado");
     });
-    
-  }
+  };
 
   //obtener datos
 
-  const getEmpleados = ()=>{
-    Axios.get("http://localhost:5174/empleados").then((response)=>{
+  const getEmpleados = () => {
+    Axios.get("http://localhost:5174/empleados").then((response) => {
       setEmpleados(response.data);
-   
     });
-    
+  };
+
+  const editarEmpleado = (val) => {
+    setEditar(true);
+    setId(val.id);
+    setNombre(val.nombre);
+    setEdad(val.edad);
+    setPais(val.pais);
+    setCargo(val.cargo);
+    setAnio(val.anios);
+  };
+
+
+  const update = () => {
+    Axios.put("http://localhost:5174/update", {
+      id: id,
+      nombre: nombre,
+      edad: edad,
+      pais: pais,
+      cargo: cargo,
+      anio: anio,
+    }).then(() => {
+      getEmpleados();
+      alert("empleado actualizado");
+    });
+  };
+
+  const clear = ()=>{
+    setNombre("");
+    setEdad("");
+    setPais("");
+    setCargo("");
+    setAnio("");
+    setEditar(false);
   }
-
- 
-
   return (
-    <div>
-    <div className='flex flex-col p-10 justify-center w-full items-center bg-green-300' >
-      <label>Nombre<input type="text" className='border-2 border-red-600 m-[10px] h-[30px] pl-[10px] w-[300px] rounded'
-      onChange={(event)=>{
-        setNombre(event.target.value);
-      }} /></label>
-      <label>Edad <input type="number" className='border-2 border-red-600 m-[10px] h-[30px] pl-[10px] w-[300px] rounded'
-      onChange={(event) => {
-        setEdad(event.target.value)
-      }} /></label>
-      <label>Pais<input type="text" className='border-2 border-red-600 m-[10px] h-[30px] pl-[10px] w-[300px] rounded' 
-      onChange={(event)=>
-        setPais(event.target.value)
-      }/></label>
-      <label>Cargo <input type="text" className='border-2 border-red-600 m-[10px] h-[30px] pl-[10px] w-[300px] rounded'
-      onChange={(event)=>
-        setCargo(event.target.value)
-      } /></label>
-      <label>Años<input type="number" className='border-2 border-red-600 m-[10px] h-[30px] pl-[10px] w-[300px] rounded'
-      onChange={(event)=>{
-        setAnio(event.target.value)
-      }} /></label>
-      <button className='border-2 bg-yellow-100 mt-4 h-[50px] pl-[10px] w-[320px] rounded' onClick={resgistrar}>Registrar</button>
-    </div>
-
-
-    <div className='lista'>
-    
-      {
-        empleadosList.map((val,key)=>{
-          return <div>
-            <h1>{val.nombre}</h1>
-            <h1>{val.edad}</h1>
-            <h1>{val.pais}</h1>
-            <h1>{val.cargo}</h1>
-            <h1>{val.anio}</h1>
+    <div className="container">
+      <div className="card text-center">
+        <div className="card-header">GESTION DE EMPLEADOS</div>
+        <div className="card-body">
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">
+              Nombre
+            </span>
+            <input
+              type="text"
+              value={nombre}
+              className="form-control"
+              placeholder="Ingrese su nombre"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              onChange={(event) => {
+                setNombre(event.target.value);
+              }}
+            />
+          </div>
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">
+              Edad
+            </span>
+            <input
+              type="number"
+              value={edad}
+              className="form-control"
+              placeholder="Ingrese su edad"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              onChange={(event) => {
+                setEdad(event.target.value);
+              }}
+            />
+          </div>
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">
+              Pais
+            </span>
+            <input
+              type="text"
+              value={pais}
+              className="form-control"
+              placeholder="Ingrese su pais"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              onChange={(event) => setPais(event.target.value)}
+            />
+          </div>
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">
+              Cargo
+            </span>
+            <input
+              type="text"
+              value={cargo}
+              className="form-control"
+              placeholder="Ingrese su cargo"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              onChange={(event) => setCargo(event.target.value)}
+            />
+          </div>
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">
+              Años
+            </span>
+            <input
+              type="number"
+              value={anio}
+              className="form-control"
+              placeholder="Ingrese años de esperiencia"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              onChange={(event) => {
+                setAnio(event.target.value);
+              }}
+            />
+          </div>
+        </div>
+        <div className="card-footer text-body-secondary">
+          {editar? (
+            <div>
+              <button className="btn btn-warning mr-5" onClick={update}>
+              Actualizar
+            </button>
+            <button className="btn btn-info" onClick={clear}>
+              cancelar
+            </button>
 
             </div>
-        })
-      }
-
-    
-
-    </div>
-    
+            
+          ) : (
+            <button className="btn btn-success" onClick={resgistrar}>
+              Registrar
+            </button>
+          )}
+        </div>
+      </div>
+      <table className="table table-success table-striped">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Edad</th>
+            <th scope="col">Pais</th>
+            <th scope="col">Cargo</th>
+            <th scope="col">Experiencia</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {empleadosList.map((val, key) => {
+            //valores de la columnas de la db
+            return (
+              <tr key={val.id}>
+                <th scope="row">{val.id}</th>
+                <td>{val.nombre}</td>
+                <td>{val.edad}</td>
+                <td>{val.pais}</td>
+                <td>{val.cargo}</td>
+                <td>{val.anios}</td>
+                <td>
+                  <div
+                    className="btn-group"
+                    role="group"
+                    aria-label="Basic mixed styles example"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        editarEmpleado(val);
+                      }}
+                      className="btn btn-info"
+                    >
+                      Editar
+                    </button>
+                    <button type="button" className="btn btn-danger">
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
 
-export default App
+export default App;

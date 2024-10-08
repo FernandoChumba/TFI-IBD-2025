@@ -56,6 +56,27 @@ app.get("/empleados", (req,res) => {
 
 });
 
+app.put("/update", (req,res) => {
+    const id = req.body.id;
+    const nombre = req.body.nombre;
+    const edad = req.body.edad;
+    const pais = req.body.pais;
+    const cargo = req.body.cargo;
+    const anio = req.body.anio;
+
+
+    db.query('UPDATE empleados SET nombre=?, edad=?, pais=?, cargo=?, anios=? WHERE id=?', [nombre, edad, pais, cargo, anio, id], (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send("actualizado");
+        }
+    });
+    
+
+});
+
+
 app.listen(5174, ()=>{
     console.log("corriendo en 5174")
 })
