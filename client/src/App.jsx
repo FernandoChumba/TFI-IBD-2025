@@ -5,6 +5,10 @@ import "./index.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Swal from 'sweetalert2'
+
+
+
 function App() {
   const [id, setId] = useState();
   const [nombre, setNombre] = useState("");
@@ -34,7 +38,13 @@ function App() {
     }).then(() => {
       getEmpleados();
       clear();
-      alert("empleado registrado");
+      Swal.fire({
+        title: "<strong>Registro Exitoso</strong>",
+        html: "<i>El empleado <strong> "+nombre+" </strong>fue registrado con exito !!</i>",
+        icon: 'success',
+        timer: 3000
+     
+      })
     });
   };
 
@@ -54,6 +64,7 @@ function App() {
     setPais(val.pais);
     setCargo(val.cargo);
     setAnio(val.anios);
+
   };
 
 
@@ -67,7 +78,13 @@ function App() {
       anio: anio,
     }).then(() => {
       getEmpleados();
-      alert("empleado actualizado");
+      Swal.fire({
+        title: "<strong>Datos Actualizados</strong>",
+        html: "<i>El empleado <strong> "+nombre+" </strong>fue registrado con exito !!</i>",
+        icon: 'success',
+        timer: 3000
+     
+      })
     });
   };
 
@@ -79,6 +96,26 @@ function App() {
     setAnio("");
     setEditar(false);
   }
+
+
+
+  const deleteEmple = (id) => {
+    Axios.delete(`http://localhost:5174/delete/${id}`, {
+    }).then(() => {
+      getEmpleados();
+      clear();
+      Swal.fire({
+        title: "<strong>Eliminacion Exitosa !!</strong>",
+        html: "<i>El empleado <strong> "+nombre+" </strong>fue eliminado con exito !!</i>",
+        icon: 'success',
+        timer: 3000
+     
+      })
+    });
+  };
+
+
+
   return (
     <div className="container">
       <div className="card text-center">
@@ -218,7 +255,13 @@ function App() {
                     >
                       Editar
                     </button>
-                    <button type="button" className="btn btn-danger">
+                    <button 
+                    type="button"
+                    onClick={() => {
+                      deleteEmple(val.id);
+                    }}
+                     className="btn btn-danger"
+                  >
                       Eliminar
                     </button>
                   </div>
