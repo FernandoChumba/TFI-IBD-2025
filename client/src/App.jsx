@@ -5,14 +5,12 @@ import "./index.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import Swal from 'sweetalert2'
-
-
+import Swal from "sweetalert2";
 
 function App() {
   const [id, setId] = useState();
   const [nombre, setNombre] = useState("");
-  const [edad, setEdad] = useState(0);
+  const [edad, setEdad] = useState("");
   const [pais, setPais] = useState("");
   const [cargo, setCargo] = useState("");
   const [anio, setAnio] = useState();
@@ -40,11 +38,13 @@ function App() {
       clear();
       Swal.fire({
         title: "<strong>Registro Exitoso</strong>",
-        html: "<i>El empleado <strong> "+nombre+" </strong>fue registrado con exito !!</i>",
-        icon: 'success',
-        timer: 3000
-     
-      })
+        html:
+          "<i>El empleado <strong> " +
+          nombre +
+          " </strong>fue registrado con exito !!</i>",
+        icon: "success",
+        timer: 3000,
+      });
     });
   };
 
@@ -64,9 +64,7 @@ function App() {
     setPais(val.pais);
     setCargo(val.cargo);
     setAnio(val.anios);
-
   };
-
 
   const update = () => {
     Axios.put("http://localhost:5174/update", {
@@ -80,41 +78,54 @@ function App() {
       getEmpleados();
       Swal.fire({
         title: "<strong>Datos Actualizados</strong>",
-        html: "<i>El empleado <strong> "+nombre+" </strong>fue registrado con exito !!</i>",
-        icon: 'success',
-        timer: 3000
-     
-      })
+        html:
+          "<i>El empleado <strong> " +
+          nombre +
+          " </strong>fue registrado con exito !!</i>",
+        icon: "success",
+        timer: 3000,
+      });
     });
   };
 
-  const clear = ()=>{
+  const clear = () => {
     setNombre("");
     setEdad("");
     setPais("");
     setCargo("");
     setAnio("");
     setEditar(false);
-  }
-
-
-
-  const deleteEmple = (id) => {
-    Axios.delete(`http://localhost:5174/delete/${id}`, {
-    }).then(() => {
-      getEmpleados();
-      clear();
-      Swal.fire({
-        title: "<strong>Eliminacion Exitosa !!</strong>",
-        html: "<i>El empleado <strong> "+nombre+" </strong>fue eliminado con exito !!</i>",
-        icon: 'success',
-        timer: 3000
-     
-      })
-    });
   };
 
-
+  const deleteEmple = (val) => {
+    Swal.fire({
+      title: "Confirmar Eliminado?",
+      html:
+        "<i>El empleado <strong> " +
+        val.nombre +
+        " </strong>fue eliminado con exito !!</i>",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminarlo!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Axios.delete(`http://localhost:5174/delete/${val.id}`).then(() => {
+          getEmpleados();
+          clear();
+          Swal.fire({
+            title: "Eliminado!",
+            text: val.nombre + "Eliminado.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 3000
+          });
+        })
+       
+      }
+    });
+  };
 
   return (
     <div className="container">
@@ -199,17 +210,15 @@ function App() {
           </div>
         </div>
         <div className="card-footer text-body-secondary">
-          {editar? (
+          {editar ? (
             <div>
               <button className="btn btn-warning mr-5" onClick={update}>
-              Actualizar
-            </button>
-            <button className="btn btn-info" onClick={clear}>
-              cancelar
-            </button>
-
+                Actualizar
+              </button>
+              <button className="btn btn-info" onClick={clear}>
+                cancelar
+              </button>
             </div>
-            
           ) : (
             <button className="btn btn-success" onClick={resgistrar}>
               Registrar
@@ -255,13 +264,13 @@ function App() {
                     >
                       Editar
                     </button>
-                    <button 
-                    type="button"
-                    onClick={() => {
-                      deleteEmple(val.id);
-                    }}
-                     className="btn btn-danger"
-                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        deleteEmple(val);
+                      }}
+                      className="btn btn-danger"
+                    >
                       Eliminar
                     </button>
                   </div>
