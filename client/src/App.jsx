@@ -45,7 +45,14 @@ function App() {
         icon: "success",
         timer: 3000,
       });
-    });
+    }).catch(function(error){
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde": JSON.parse(JSON.stringify(error)).message,
+        timmer: 3000
+      });
+    })
   };
 
   //obtener datos
@@ -85,7 +92,14 @@ function App() {
         icon: "success",
         timer: 3000,
       });
-    });
+    }).catch(function(error){
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde": JSON.parse(JSON.stringify(error)).message,
+        timmer: 3000
+      });
+    })
   };
 
   const clear = () => {
@@ -120,6 +134,13 @@ function App() {
             icon: "success",
             showConfirmButton: false,
             timer: 3000
+          });
+        }).catch(function(error){
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde": JSON.parse(JSON.stringify(error)).message,
+            timmer: 3000
           });
         })
        
